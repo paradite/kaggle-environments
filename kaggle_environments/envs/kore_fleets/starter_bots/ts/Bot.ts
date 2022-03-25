@@ -3,6 +3,10 @@ import { Direction } from "./kore/Direction";
 import { ShipyardAction } from "./kore/ShipyardAction";
 import { KoreIO } from "./kore/KoreIO";
 
+
+var fs = require('fs');
+const debug_stream = fs.createWriteStream('log_debug.txt');
+
 const io = new KoreIO();
 // agent.run takes care of running your code per tick
 io.run((board: Board): Board => {
@@ -10,6 +14,11 @@ io.run((board: Board): Board => {
     const turn = board.step;
     const spawnCost = board.configuration.spawnCost;
     let koreLeft = me.kore;
+
+    const gameStatsStr =
+    `turn: ${turn} shipyard0 maxSpawn: ${me.shipyards[0].maxSpawn}` + '\n';
+    
+    debug_stream.write(gameStatsStr);
 
     for (let shipyard of me.shipyards) {
         if (shipyard.shipCount > 10) {
